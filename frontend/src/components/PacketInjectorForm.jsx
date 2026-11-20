@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Send, AlertCircle, CheckCircle, ShieldAlert, Zap, Terminal } from 'lucide-react';
+import { processPacket } from '../utils/api';
 
 const IP_REGEX = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
@@ -146,18 +147,13 @@ export default function PacketInjectorForm({ onPacketSubmitted }) {
     setLastResult(null);
 
     try {
-      const response = await fetch('/api/traffic/process', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      const data = await processPacket(formData);
 
-      const data = await response.json();
-      if (!response.ok) {
-        if (data.errors) {
+      if (!data || data.success === false) {
+        if (data?.errors) {
           setErrors(data.errors);
         } else {
-          setErrors({ form: data.message || 'Error processing packet' });
+          setErrors({ form: data?.message || 'Error processing packet' });
         }
       } else {
         setLastResult(data);
@@ -166,7 +162,7 @@ export default function PacketInjectorForm({ onPacketSubmitted }) {
         }
       }
     } catch (err) {
-      setErrors({ form: 'Network connection failed: ' + err.message });
+      setErrors({ form: 'Inspection failed: ' + err.message });
     } finally {
       setSubmitting(false);
     }
