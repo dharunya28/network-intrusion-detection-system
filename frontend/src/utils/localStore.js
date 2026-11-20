@@ -286,10 +286,14 @@ export const getLocalStats = () => {
 
   return {
     totalPackets,
+    maliciousCount,
     maliciousPackets: maliciousCount,
+    suspiciousCount,
     suspiciousPackets: suspiciousCount,
+    cleanCount,
     cleanPackets: cleanCount,
     activeAlerts: alerts.filter((a) => a.status === 'ACTIVE').length,
+    totalAlerts: alerts.length,
     attackTypeBreakdown,
     protocolBreakdown,
     detectionRatio: totalPackets > 0 ? (((maliciousCount + suspiciousCount) / totalPackets) * 100).toFixed(1) : '0.0',

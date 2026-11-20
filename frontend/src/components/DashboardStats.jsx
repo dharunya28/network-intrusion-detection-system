@@ -3,9 +3,9 @@ import { ShieldCheck, AlertTriangle, ShieldX, Radio } from 'lucide-react';
 
 export default function DashboardStats({ stats }) {
   const total = stats?.totalPackets || 0;
-  const clean = stats?.cleanCount || 0;
-  const suspicious = stats?.suspiciousCount || 0;
-  const malicious = stats?.maliciousCount || 0;
+  const clean = stats?.cleanCount ?? stats?.cleanPackets ?? 0;
+  const suspicious = stats?.suspiciousCount ?? stats?.suspiciousPackets ?? 0;
+  const malicious = stats?.maliciousCount ?? stats?.maliciousPackets ?? 0;
 
   const threatPercentage = total > 0 ? Math.round(((malicious + suspicious) / total) * 100) : 0;
 

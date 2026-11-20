@@ -28,7 +28,17 @@ export default function App() {
       if (healthData) setHealth(healthData);
       if (trafficData?.logs) setTrafficLogs(trafficData.logs);
       if (alertsData?.alerts) setAlerts(alertsData.alerts);
-      if (statsData?.stats) setStats(statsData.stats);
+      if (statsData?.stats) {
+        setStats(statsData.stats);
+      } else if (trafficData?.logs) {
+        const logs = trafficData.logs;
+        setStats({
+          totalPackets: logs.length,
+          maliciousCount: logs.filter((t) => t.status === 'MALICIOUS').length,
+          suspiciousCount: logs.filter((t) => t.status === 'SUSPICIOUS').length,
+          cleanCount: logs.filter((t) => t.status === 'NORMAL').length,
+        });
+      }
     } catch (err) {
       console.error('Failed to sync network data:', err);
     } finally {
